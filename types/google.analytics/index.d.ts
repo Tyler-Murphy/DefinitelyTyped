@@ -4,22 +4,98 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 
 declare class Tracker {
-    _trackPageview(): void;
+    // Basic Configuration
+    // https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiBasicConfiguration
+    _trackPageview(opt_pagePath?: string): void;
     _getName(): string;
     _getAccount(): string;
     _getVersion(): string;
     _getVisitorCustomVar(index: number): string;
-    _setAccount(): string;
+    _setAccount(accountId: string): string;
     _setCustomVar(index: number, name: string, value: string, opt_scope?: number): boolean;
     _setSampleRate(newRate: string): void;
     _setSessionCookieTimeout(cookieTimeoutMillis: number): void;
     _setSiteSpeedSampleRate(sampleRate: number): void;
     _setVisitorCookieTimeout(milliseconds: number): void;
     _trackPageLoadTime(): void;
+
+    // Campaign Tracking
+    // https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiCampaignTracking
+    _setAllowAnchor(bool: boolean): void;
+    _setCampContentKey(newCampContentKey: string): void;
+    _setCampMediumKey(newCampMediumKey: string): void;
+    _setCampNameKey(newCampNameKey: string): void;
+    _setCampNOKey(newCampNOKey: string): void;
+    _setCampSourceKey(newCampSrcKey: string): void;
+    _setCampTermKey(newCampTermKey: string): void;
+    _setCampaignTrack(bool: boolean): void;
+    _setCampaignCookieTimeout(cookieTimeoutMillis: number): void;
+    _setReferrerOverride(newReferrerUrl: string): void;
+
+    // Domains and Directories
+    // https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiDomainDirectory
+    _cookiePathCopy(newPath: string): void;
+    _getLinkerUrl(targetUrl: string, useHash?: boolean): string;
+    _link(targetUrl: string, useHash?: boolean): void;
+    _linkByPost(formObject: HTMLFormElement, useHash?: boolean): void;
+    _setAllowLinker(bool: boolean): void;
+    _setCookiePath(newCookiePath: string): void;
+    _setDomainName(newDomainName: string): void;
+    _storeGac(bool: boolean): void;
+
+    // Ecommerce
+    // https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiEcommerce
+    _addItem(transactionId: string, sku: NonNullable<string>, name: NonNullable<string>, category: string, price: NonNullable<string>, quantity: NonNullable<string>): void;
+    _addTrans(transactionId: NonNullable<string>, affiliation: string, total: NonNullable<string>, tax: string, shipping: string, city: string, state: string, country: string): void;
+    _trackTrans(): void;
+
+    // Event Tracking
+    _trackEvent(category: string, action: string, opt_label?: string, opt_value?: number, opt_noninteraction?: boolean): boolean;
+
+    // Search Engines and Referrers
+    // https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiSearchEngines
+    _addIgnoredOrganic(newIgnoredOrganicKeyword: string): void;
+    _addIgnoredRef(newIgnoredReferrer: string): void;
+    _addOrganic(newOrganicEngine: string, queryParamName: string, opt_prepend?: boolean): void;
+    _clearIgnoredOrganic(): void;
+    _clearIgnoredRef(): void;
+    _clearOrganic(): void;
+
+    // Social Plug-in Analytics
+    // https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiSocialTracking
+    _trackSocial(network: string, socialAction: string, opt_target?: string, opt_pagePath?: string): void;
+
+    // Web Client
+    // https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiWebClient
+    _getClientInfo(): boolean;
+    _getDetectFlash(): boolean;
+    _getDetectTitle(): boolean;
+    _setClientInfo(bool: boolean): void;
+    _setDetectFlash(enable: boolean): void;
+    _setDetectTitle(enable: boolean): void;
+
+    // Urchin Server
+    // https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiUrchin
+    _getLocalGifPath(): string;
+    _getServiceMode(): number;
+    _setLocalGifPath(newLocalGifPath: string): void;
+    _setLocalRemoteServerMode(): void;
+    _setLocalServerMode(): void;
+    _setRemoteServerMode(): void;
+
+    // Site Speed User Timing
+    // https://developers.google.com/analytics/devguides/collection/gajs/methods/gaJSApiUserTiming
+    _trackTiming(category: string, variable: string, time: number, opt_label?: string, opt_sampleRate?: number): void
+}
+
+type TrackerPushArgs = {
+    [MethodName in keyof Tracker]: (methodName: MethodName, ...args: Parameters<Tracker[MethodName]>) => any
 }
 
 interface GoogleAnalyticsCode {
-    push(commandArray: string[]): void;
+    push<MethodName extends keyof TrackerPushArgs>(commandArray: Parameters<TrackerPushArgs[MethodName]>): void;
+    push(commandArray: ['_gat._anonymizeIp']): void;
+    push(commandArray: ['_gat._forceSSL']): void;
     push(func: Function): void;
 }
 
